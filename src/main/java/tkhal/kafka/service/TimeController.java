@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 import static java.lang.System.getenv;
 
@@ -30,21 +32,26 @@ public class TimeController {
         // starting new Kafka producer
         producer = kafkaServiceProducer.createProducer();
 
-        long duration = Long.parseLong(getenv("DURATION"));
+        int timestamp = Integer.parseInt(getenv("DURATION"));
 
         while (true) {
-            // reading messages from Kafka topic
-            ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(duration));
-            for (ConsumerRecord<String, String> message : messages) {
-                try {
-                    LOGGER.info("Controller received "
-                            + message.toString());
-                    tempMessage = message.value();
-                } catch (Exception e) {
-                    LOGGER.error(String.valueOf(e));
+            LocalTime timeNow = LocalTime.now();
+            ArrayList<String> records = new ArrayList<String>();
+
+            while (timeNow.plusSeconds(timestamp).isAfter(LocalTime.now())) {
+                ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(1));
+                if (messages.isEmpty()) {
+                } else {
+                    for (ConsumerRecord<String, String> message : messages) {
+                        records.add(message.value());
+                    }
                 }
-                // sending car by Kafka producer
-                kafkaServiceProducer.send(tempMessage);
+            }
+
+            if (records.size() > 0) {
+                for (String record : records) {
+                    kafkaServiceProducer.send(record);
+                }
             }
         }
     }
