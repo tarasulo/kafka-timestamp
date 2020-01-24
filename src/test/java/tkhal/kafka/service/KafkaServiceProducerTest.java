@@ -9,6 +9,6 @@ public class KafkaServiceProducerTest {
     public void test() {
         producer = new KafkaServiceProducer();
         producer.createProducer();
-        producer.send("test", "Topic2");
+        producer.send("testMessage", "Topic2");
     }
 }

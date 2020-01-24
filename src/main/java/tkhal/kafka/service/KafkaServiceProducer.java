@@ -27,7 +27,7 @@ public class KafkaServiceProducer {
 
     public void send(String record, String topicName) {
         /**
-         * This is the method which sending car
+         * This is the method which sending message
          * to the topic
          */
         try {
