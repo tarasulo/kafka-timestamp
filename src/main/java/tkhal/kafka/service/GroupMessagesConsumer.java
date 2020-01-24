@@ -7,21 +7,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.Collections;
 
 public class GroupMessagesConsumer {
-    private final static Logger LOGGER = LoggerFactory.getLogger(GroupMessagesConsumer.class);
-    private String topicName = "Topic2";
-    private static KafkaServiceConsumer kafkaServiceConsumer;
-    private static KafkaConsumer<String, String> consumer;
+    private final Logger LOGGER = LoggerFactory.getLogger(GroupMessagesConsumer.class);
+    private String topicName;
+    private KafkaServiceConsumer kafkaServiceConsumer;
+    private KafkaConsumer<String, String> consumer;
 
-    public GroupMessagesConsumer() {
+    public GroupMessagesConsumer(String topicName) {
         this.kafkaServiceConsumer = new KafkaServiceConsumer();
+        this.topicName = topicName;
     }
 
     public void run() {
-        consumer = kafkaServiceConsumer.startConsumer();
-        consumer.subscribe(Collections.singletonList(topicName));
+        consumer = kafkaServiceConsumer.startConsumer(topicName);
 
         while (true) {
             // reading messages from Kafka topic
@@ -37,7 +36,7 @@ public class GroupMessagesConsumer {
         }
     }
     public static void main(String[] args) {
-        GroupMessagesConsumer groupMessagesConsumer = new GroupMessagesConsumer();
+        GroupMessagesConsumer groupMessagesConsumer = new GroupMessagesConsumer("Topic2");
         groupMessagesConsumer.run();
     }
 }

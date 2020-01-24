@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Properties;
 
 public class KafkaServiceProducer {
-    private String topicName = "Topic2";
     private final static Logger LOGGER = LoggerFactory.getLogger(KafkaServiceProducer.class);
     private Producer<String, String> producer;
 
@@ -29,7 +28,7 @@ public class KafkaServiceProducer {
         return producer;
     }
 
-    public void send(String record) {
+    public void send(String record, String topicName) {
         /**
          * This is the method which sending car
          * to the topic

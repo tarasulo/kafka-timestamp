@@ -14,21 +14,24 @@ import java.util.ArrayList;
 import static java.lang.System.getenv;
 
 public class TimeController {
-    private final static Logger LOGGER = LoggerFactory.getLogger(TimeController.class);
-    private static KafkaServiceConsumer kafkaServiceConsumer;
-    private static KafkaServiceProducer kafkaServiceProducer;
-    private static KafkaConsumer<String, String> consumer;
-    private static Producer<String, String> producer;
-    private static String tempMessage;
+    private final Logger LOGGER = LoggerFactory.getLogger(TimeController.class);
+    private KafkaServiceConsumer kafkaServiceConsumer;
+    private KafkaServiceProducer kafkaServiceProducer;
+    private KafkaConsumer<String, String> consumer;
+    private Producer<String, String> producer;
+    private String consumerTopicName;
+    private String producerTopicName;
 
     public TimeController() {
         this.kafkaServiceConsumer = new KafkaServiceConsumer();
         this.kafkaServiceProducer = new KafkaServiceProducer();
     }
 
-    public void run() throws InterruptedException {
+    public void run() {
+        consumerTopicName = "topic1";
+        producerTopicName = "Topic2";
         // starting new Kafka consumer
-        consumer = kafkaServiceConsumer.startConsumer();
+        consumer = kafkaServiceConsumer.startConsumer(consumerTopicName);
         // starting new Kafka producer
         producer = kafkaServiceProducer.createProducer();
 
@@ -40,23 +43,18 @@ public class TimeController {
 
             while (timeNow.plusSeconds(timestamp).isAfter(LocalTime.now())) {
                 ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(1));
-                if (messages.isEmpty()) {
-                } else {
-                    for (ConsumerRecord<String, String> message : messages) {
-                        records.add(message.value());
-                    }
+                for (ConsumerRecord<String, String> message : messages) {
+                    records.add(message.value());
                 }
             }
-
-            if (records.size() > 0) {
-                for (String record : records) {
-                    kafkaServiceProducer.send(record);
-                }
+            for (String record : records) {
+                kafkaServiceProducer.send(record, producerTopicName);
+                LOGGER.info("TimeController resend " + record);
             }
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         TimeController timeController = new TimeController();
         timeController.run();
     }

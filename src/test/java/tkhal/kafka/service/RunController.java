@@ -6,10 +6,6 @@ public class RunController extends Thread {
     public void run() {
         String[] args = new String[0];
         TimeController controller = new TimeController();
-        try {
-            controller.main(args);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        controller.main(args);
     }
 }

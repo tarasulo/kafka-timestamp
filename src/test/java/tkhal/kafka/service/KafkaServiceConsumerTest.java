@@ -8,6 +8,6 @@ public class KafkaServiceConsumerTest {
     @Test
     public void test() {
         consumer = new KafkaServiceConsumer();
-        consumer.startConsumer();
+        consumer.startConsumer("topic1");
     }
 }
