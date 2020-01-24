@@ -16,13 +16,10 @@ public class KafkaServiceProducer {
     }
 
     public Producer<String, String> createProducer() {
-
-        new KafkaServiceProducer();
         Properties propsRedirect = new Properties();
         propsRedirect.put("bootstrap.servers", "localhost:9092");
         propsRedirect.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         propsRedirect.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
         // creating new Kafka producer
         producer = new KafkaProducer<>(propsRedirect);
         return producer;

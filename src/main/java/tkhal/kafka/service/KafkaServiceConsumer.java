@@ -14,7 +14,6 @@ public class KafkaServiceConsumer {
     }
 
     public KafkaConsumer<String, String> startConsumer(String topicName) {
-        new KafkaServiceConsumer();
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
