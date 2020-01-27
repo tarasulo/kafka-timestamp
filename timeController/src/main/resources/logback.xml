@@ -8,7 +8,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>kcos.log</file>
+        <file>timestamp.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>kcos.%d{yyyy-MM-dd}.log</fileNamePattern>
