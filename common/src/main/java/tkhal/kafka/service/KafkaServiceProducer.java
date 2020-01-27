@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
+import static java.lang.System.getenv;
+
 public class KafkaServiceProducer {
     private final static Logger LOGGER = LoggerFactory.getLogger(KafkaServiceProducer.class);
     private Producer<String, String> producer;
@@ -17,7 +19,7 @@ public class KafkaServiceProducer {
 
     public Producer<String, String> createProducer() {
         Properties propsRedirect = new Properties();
-        propsRedirect.put("bootstrap.servers", "localhost:9092");
+        propsRedirect.put("bootstrap.servers", getenv("HOST"));
         propsRedirect.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         propsRedirect.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         // creating new Kafka producer

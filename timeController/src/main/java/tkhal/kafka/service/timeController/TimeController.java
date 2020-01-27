@@ -1,4 +1,4 @@
-package tkhal.kafka.service;
+package tkhal.kafka.service.timeController;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -6,6 +6,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tkhal.kafka.service.KafkaServiceConsumer;
+import tkhal.kafka.service.KafkaServiceProducer;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -36,20 +38,28 @@ public class TimeController {
         producer = kafkaServiceProducer.createProducer();
 
         int timestamp = Integer.parseInt(getenv("DURATION"));
+        int timeForSend = Integer.parseInt(getenv("SEND_TIME"));
+        ArrayList<String> records = new ArrayList<String>();
 
         while (true) {
             LocalTime timeNow = LocalTime.now();
-            ArrayList<String> records = new ArrayList<String>();
-
+            StringBuilder pack = new StringBuilder();
             while (timeNow.plusSeconds(timestamp).isAfter(LocalTime.now())) {
                 ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(1));
                 for (ConsumerRecord<String, String> message : messages) {
-                    records.add(message.value());
+                    pack.append(message.value() + " ");
                 }
             }
-            for (String record : records) {
-                kafkaServiceProducer.send(record, producerTopicName);
-                LOGGER.info("TimeController resend " + record);
+            records.add(pack.toString());
+            while (timeNow.plusSeconds(timeForSend).isAfter(LocalTime.now())) {
+                for (String record : records) {
+                    if (record != "" && record != " ") {
+                        kafkaServiceProducer.send(record, producerTopicName);
+                        LOGGER.info("TimeController resend " + record);
+                    }
+                    records.remove(record);
+                    break;
+                }
             }
         }
     }
@@ -58,4 +68,5 @@ public class TimeController {
         TimeController timeController = new TimeController();
         timeController.run();
     }
+
 }

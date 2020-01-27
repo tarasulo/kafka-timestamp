@@ -1,9 +1,11 @@
-package tkhal.kafka.service;
+package tkhal.kafka.service.randomStringProducer;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.clients.producer.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tkhal.kafka.service.KafkaServiceProducer;
+
 
 import java.time.LocalTime;
 
@@ -26,7 +28,7 @@ public class LoremProducer {
         boolean useLetters = true;
         boolean useNumbers = false;
         localTime = LocalTime.now();
-        for (LocalTime i=localTime; i.isBefore(localTime.plusSeconds(20)); i=LocalTime.now()) {
+        for (LocalTime i=localTime; i.isBefore(localTime.plusSeconds(40)); i=LocalTime.now()) {
             generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
             Thread.sleep(300L);
             LOGGER.info(generatedString);
