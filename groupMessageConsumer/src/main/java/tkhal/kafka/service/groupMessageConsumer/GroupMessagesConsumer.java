@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tkhal.kafka.service.KafkaServiceConsumer;
 
-
 import java.time.Duration;
 
 public class GroupMessagesConsumer {
