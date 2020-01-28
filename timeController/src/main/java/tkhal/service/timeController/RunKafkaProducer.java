@@ -24,7 +24,7 @@ public class RunKafkaProducer implements Runnable {
     public void run() {
         LinkedList<String> records = new LinkedList<>();
         while (true) {
-            if (Storage.getPack().toString().hashCode() != 0) {
+            if (Storage.getPack().length() != 0) {
                 String buffer = Storage.getPack().toString();
                 records.add(buffer);
                 LocalTime timeNow = LocalTime.now();
