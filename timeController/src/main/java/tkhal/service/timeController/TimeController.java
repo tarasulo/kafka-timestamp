@@ -1,22 +1,13 @@
 package tkhal.service.timeController;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.Producer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tkhal.service.kafka.KafkaServiceConsumer;
 import tkhal.service.kafka.KafkaServiceProducer;
-
-import java.time.Duration;
-import java.time.LocalTime;
-import java.util.LinkedList;
 
 import static java.lang.System.getenv;
 
 public class TimeController {
-    private final Logger LOGGER = LoggerFactory.getLogger(TimeController.class);
     private KafkaServiceConsumer kafkaServiceConsumer;
     private KafkaServiceProducer kafkaServiceProducer;
     private KafkaConsumer<String, String> consumer;
@@ -32,40 +23,15 @@ public class TimeController {
     public void run() {
         consumerTopicName = "topic1";
         producerTopicName = "Topic2";
-        // starting new Kafka consumer
         consumer = kafkaServiceConsumer.startConsumer(consumerTopicName);
-        // starting new Kafka producer
         producer = kafkaServiceProducer.createProducer();
 
         int timestamp = Integer.parseInt(getenv("DURATION"));
         int timeForSend = Integer.parseInt(getenv("SEND_TIME"));
-        LinkedList<String> records = new LinkedList<String>();
-
-        while (true) {
-            LocalTime timeNow = LocalTime.now();
-            StringBuilder pack = new StringBuilder();
-            while (timeNow.plusSeconds(timestamp).isAfter(LocalTime.now())) {
-                ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(1));
-                for (ConsumerRecord<String, String> message : messages) {
-                    pack.append(message.value() + " ");
-                }
-            }
-            if (pack.toString().hashCode() == 0 && records.size() == 0) {
-            } else {
-                records.add(pack.toString());
-                while (timeNow.plusSeconds(timeForSend).isAfter(LocalTime.now())) {
-                    for (String record : records) {
-                        if (record.hashCode() != 0) {
-                            kafkaServiceProducer.send(record, producerTopicName);
-                            LOGGER.info("TimeController resend " + record);
-                        }
-                        records.remove(record);
-                        break;
-                    }
-                }
-            }
-
-        }
+        RunKafkaConsumer runKafkaConsumer = new RunKafkaConsumer(consumer, timestamp);
+        runKafkaConsumer.start();
+        Thread runKafkaProducer = new Thread(new RunKafkaProducer(kafkaServiceProducer, timeForSend, producerTopicName));
+        runKafkaProducer.start();
     }
 
     public static void main(String[] args) {
