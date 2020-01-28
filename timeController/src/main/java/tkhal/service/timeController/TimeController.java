@@ -1,4 +1,4 @@
-package tkhal.kafka.service.timeController;
+package tkhal.service.timeController;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -6,12 +6,12 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tkhal.kafka.service.KafkaServiceConsumer;
-import tkhal.kafka.service.KafkaServiceProducer;
+import tkhal.service.kafka.KafkaServiceConsumer;
+import tkhal.service.kafka.KafkaServiceProducer;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import static java.lang.System.getenv;
 
@@ -39,7 +39,7 @@ public class TimeController {
 
         int timestamp = Integer.parseInt(getenv("DURATION"));
         int timeForSend = Integer.parseInt(getenv("SEND_TIME"));
-        ArrayList<String> records = new ArrayList<String>();
+        LinkedList<String> records = new LinkedList<String>();
 
         while (true) {
             LocalTime timeNow = LocalTime.now();
@@ -50,17 +50,21 @@ public class TimeController {
                     pack.append(message.value() + " ");
                 }
             }
-            records.add(pack.toString());
-            while (timeNow.plusSeconds(timeForSend).isAfter(LocalTime.now())) {
-                for (String record : records) {
-                    if (record != "" && record != " ") {
-                        kafkaServiceProducer.send(record, producerTopicName);
-                        LOGGER.info("TimeController resend " + record);
+            if (pack.toString().hashCode() == 0 && records.size() == 0) {
+            } else {
+                records.add(pack.toString());
+                while (timeNow.plusSeconds(timeForSend).isAfter(LocalTime.now())) {
+                    for (String record : records) {
+                        if (record.hashCode() != 0) {
+                            kafkaServiceProducer.send(record, producerTopicName);
+                            LOGGER.info("TimeController resend " + record);
+                        }
+                        records.remove(record);
+                        break;
                     }
-                    records.remove(record);
-                    break;
                 }
             }
+
         }
     }
 

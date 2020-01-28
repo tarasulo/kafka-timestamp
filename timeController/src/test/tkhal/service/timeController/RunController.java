@@ -1,4 +1,4 @@
-package tkhal.kafka.service;
+package tkhal.service.timeController;
 
 public class RunController extends Thread {
 

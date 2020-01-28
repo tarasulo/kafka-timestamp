@@ -1,4 +1,4 @@
-package tkhal.kafka.service;
+package tkhal.service.kafka;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;

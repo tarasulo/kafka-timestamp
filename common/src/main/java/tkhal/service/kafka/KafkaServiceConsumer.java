@@ -1,4 +1,4 @@
-package tkhal.kafka.service;
+package tkhal.service.kafka;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;

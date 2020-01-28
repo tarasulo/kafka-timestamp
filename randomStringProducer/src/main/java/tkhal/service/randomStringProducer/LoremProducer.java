@@ -1,10 +1,10 @@
-package tkhal.kafka.service.randomStringProducer;
+package tkhal.service.randomStringProducer;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.clients.producer.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tkhal.kafka.service.KafkaServiceProducer;
+import tkhal.service.kafka.KafkaServiceProducer;
 
 import java.time.LocalTime;
 

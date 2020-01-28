@@ -1,4 +1,4 @@
-package tkhal.kafka.service;
+package tkhal.service.kafka;
 
 import org.junit.Test;
 
