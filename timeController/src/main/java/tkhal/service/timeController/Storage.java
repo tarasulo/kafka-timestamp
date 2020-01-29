@@ -11,7 +11,7 @@ public class Storage {
         return pack;
     }
 
-    public static StringBuilder clear(String record) {
+    public static StringBuilder clear(StringBuilder record) {
         return pack = pack.delete(0, record.length());
     }
 }

@@ -22,17 +22,18 @@ public class RunKafkaProducer implements Runnable {
 
     @Override
     public void run() {
-        LinkedList<String> records = new LinkedList<>();
+        LinkedList<StringBuilder> records = new LinkedList<>();
         while (true) {
             if (Storage.getPack().length() != 0) {
-                String buffer = Storage.getPack().toString();
+                StringBuilder buffer = Storage.getPack();
                 records.add(buffer);
                 LocalTime timeNow = LocalTime.now();
                 while (timeNow.plusSeconds(timeForSend).isAfter(LocalTime.now())) {
-                    for (String record : records) {
+                    for (StringBuilder record : records) {
                         if (record.hashCode() != 0) {
-                            kafkaServiceProducer.send(record, producerTopicName);
-                            LOGGER.info("TimeController resend " + record);
+                            String rec = record.toString();
+                            kafkaServiceProducer.send(rec, producerTopicName);
+                            LOGGER.info("TimeController resend " + rec);
                         }
                         records.remove(record);
                         break;
