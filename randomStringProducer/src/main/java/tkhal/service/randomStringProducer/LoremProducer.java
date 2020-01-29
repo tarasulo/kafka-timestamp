@@ -40,7 +40,7 @@ public class LoremProducer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        LoremProducer loremProducer = new LoremProducer("topic1");
+        LoremProducer loremProducer = new LoremProducer("topic0");
         loremProducer.run();
     }
 }

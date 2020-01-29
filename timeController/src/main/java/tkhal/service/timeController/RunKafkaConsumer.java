@@ -18,14 +18,14 @@ public class RunKafkaConsumer extends Thread {
 
     @Override
     public void run() {
-            while (true) {
-                LocalTime timeNow = LocalTime.now();
-                while (timeNow.plusSeconds(timestamp).isAfter(LocalTime.now())) {
-                    ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(1));
-                    for (ConsumerRecord<String, String> message : messages) {
-                        Storage.setPack(message.value());
-                    }
+        while (true) {
+            LocalTime timeNow = LocalTime.now();
+            while (timeNow.plusSeconds(timestamp).isAfter(LocalTime.now())) {
+                ConsumerRecords<String, String> messages = consumer.poll(Duration.ofSeconds(1));
+                for (ConsumerRecord<String, String> message : messages) {
+                    Storage.setPack(message.value());
                 }
             }
+        }
     }
 }

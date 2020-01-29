@@ -11,7 +11,7 @@
         <file>timestamp.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>kcos.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>timestamp.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 5 days' worth of history capped at 3GB total size -->
             <maxHistory>5</maxHistory>

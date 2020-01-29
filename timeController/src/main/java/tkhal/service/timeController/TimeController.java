@@ -21,7 +21,7 @@ public class TimeController {
     }
 
     public void run() {
-        consumerTopicName = "topic1";
+        consumerTopicName = "topic0";
         producerTopicName = "Topic2";
         consumer = kafkaServiceConsumer.startConsumer(consumerTopicName);
         producer = kafkaServiceProducer.createProducer();
