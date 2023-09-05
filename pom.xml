@@ -11,7 +11,7 @@
     <properties>
         <java.version>11</java.version>
         <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
-        <kafka.version>2.3.0</kafka.version>
+        <kafka.version>2.6.3</kafka.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4.version>1.7.25</slf4.version>
         <logback.version>1.2.3</logback.version>
